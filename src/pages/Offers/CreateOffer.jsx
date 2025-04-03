@@ -103,14 +103,29 @@ export default function CreateOffer() {
         </div>
 
         <div className="col-md-6">
-          <label className="form-label">Precio regular</label>
-          <input type="number" name="precioRegular" onChange={handleChange} required className="form-control" />
-        </div>
+  <label className="form-label">Precio regular</label>
+  <input
+    type="number"
+    step="0.01" // ← esto es lo importante
+    name="precioRegular"
+    onChange={handleChange}
+    required
+    className="form-control"
+  />
+</div>
 
-        <div className="col-md-6">
-          <label className="form-label">Precio de oferta</label>
-          <input type="number" name="precioOferta" onChange={handleChange} required className="form-control" />
-        </div>
+<div className="col-md-6">
+  <label className="form-label">Precio de oferta</label>
+  <input
+    type="number"
+    step="0.01"
+    name="precioOferta"
+    onChange={handleChange}
+    required
+    className="form-control"
+  />
+</div>
+
 
         <div className="col-md-4">
           <label className="form-label">Fecha de inicio</label>

@@ -3,8 +3,10 @@ import EmpresaLayout from "./layout/EmpresaLayout";
 
 import EmployeeList from "./pages/Employees/EmployeeList";
 import EmployeeForm from "./pages/Employees/EmployeeForm";
+
 import OfferList from "./pages/Offers/OfferList";
 import CreateOffer from "./pages/Offers/CreateOffer";
+import EditOffer from "./pages/Offers/EditOffer";
 import EmpresaLogin from "./pages/Auth/EmpresaLogin";
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -22,6 +24,7 @@ function App() {
             <Route path="empleados/nuevo" element={<EmployeeForm />} />
             <Route path="ofertas" element={<OfferList />} />
             <Route path="ofertas/nueva" element={<CreateOffer />} />
+            <Route path="ofertas/editar/:id" element={<EditOffer />} />
           </Route>
         </Route>
       </Routes>

@@ -2,17 +2,23 @@ import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 // correcto:
 import { db, auth } from "../../firebase"; 
+import useEmpresaStore from "../../store/useEmpresaStore";
+
 
 export default function EmployeeList() {
   const [empleados, setEmpleados] = useState([]);
+  const { empresa } = useEmpresaStore();
+
 
   useEffect(() => {
     const cargarEmpleados = async () => {
+      if (!empresa) return;
+  
       const q = query(
         collection(db, "empleados"),
-        where("empresaId", "==", "empresaX123") // ← reemplazar por ID real del usuario logueado
+        where("empresaId", "==", empresa.codigo)
       );
-
+  
       const querySnapshot = await getDocs(q);
       const resultado = [];
       querySnapshot.forEach((doc) => {
@@ -20,10 +26,10 @@ export default function EmployeeList() {
       });
       setEmpleados(resultado);
     };
-
+  
     cargarEmpleados();
-  }, []);
-
+  }, [empresa]);
+  
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Empleados Registrados</h2>

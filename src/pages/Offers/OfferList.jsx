@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import useEmpresaStore from "../../store/useEmpresaStore";
+import { Link } from "react-router-dom";
 
 
 export default function OfferList() {
@@ -122,8 +123,11 @@ export default function OfferList() {
     <div className="alert alert-danger mt-3">
       <strong>Justificación del rechazo:</strong><br />
       {cupon.justificacion}
-
+      <Link to={`/empresa/ofertas/editar/${cupon.id}`} className="btn btn-warning mt-2">
+    Editar y reenviar
+  </Link>
       </div>
+      
   )}
 
                       </div>

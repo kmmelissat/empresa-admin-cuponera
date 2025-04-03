@@ -40,8 +40,9 @@ const EmpresaLogin = () => {
 
       // Guardar empresa en el store
       setEmpresa({ ...empresa, id: uid });
-      // Guardar en localStorage
+      
       localStorage.setItem("empresa", JSON.stringify({ ...empresa, id: uid }));
+
 
       // Redirigir al dashboard de la empresa
       navigate("/empresa/empleados");
