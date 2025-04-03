@@ -1,15 +1,25 @@
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
+import useEmpresaStore from "../../store/useEmpresaStore";
+
 
 export default function OfferList() {
+  const { empresa } = useEmpresaStore();
+
   const [cupones, setCupones] = useState([]);
   const porcentajeComision = 0.1; // ← Esto deberías sacarlo de la empresa (hardcodeado por ahora)
   const hoy = new Date();
 
   useEffect(() => {
     const cargarCupones = async () => {
-      const q = query(collection(db, "cupones"), where("empresaId", "==", "empresaX123"));
+      if (!empresa) return; // espera a que esté cargada
+  
+      const q = query(
+        collection(db, "cupones"),
+        where("empresaId", "==", empresa.codigo)
+      );
+  
       const querySnapshot = await getDocs(q);
       const resultado = [];
       querySnapshot.forEach((doc) => {
@@ -17,9 +27,10 @@ export default function OfferList() {
       });
       setCupones(resultado);
     };
-
+  
     cargarCupones();
-  }, []);
+  }, [empresa]); // se vuelve a ejecutar cuando `empresa` esté lista
+  
 
   // Categorizar las ofertas
   const categorias = {
@@ -54,6 +65,7 @@ export default function OfferList() {
   });
 
   return (
+    
     <div className="container mt-5">
       <h2 className="mb-4">Mis Cupones</h2>
 

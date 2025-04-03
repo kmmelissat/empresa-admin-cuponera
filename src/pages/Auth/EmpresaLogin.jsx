@@ -3,8 +3,11 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { getDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import useEmpresaStore from "../../store/useEmpresaStore";
 
 const EmpresaLogin = () => {
+
+  const { setEmpresa } = useEmpresaStore();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -33,6 +36,12 @@ const EmpresaLogin = () => {
         setError("Tu cuenta no tiene el rol autorizado.");
         return;
       }
+
+
+      // Guardar empresa en el store
+      setEmpresa({ ...empresa, id: uid });
+      // Guardar en localStorage
+      localStorage.setItem("empresa", JSON.stringify({ ...empresa, id: uid }));
 
       // Redirigir al dashboard de la empresa
       navigate("/empresa/empleados");

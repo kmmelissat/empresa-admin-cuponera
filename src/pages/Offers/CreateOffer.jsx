@@ -4,9 +4,11 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { getDocs } from "firebase/firestore";
 import { useEffect } from "react";
+import useEmpresaStore from "../../store/useEmpresaStore";
 
 
 export default function CreateOffer() {
+  const { empresa } = useEmpresaStore();
 
   const [rubros, setRubros] = useState([]);
 
@@ -65,7 +67,9 @@ export default function CreateOffer() {
       fechaLimiteUso: new Date(oferta.fechaLimiteUso),
       estado: "En espera de aprobación",
       cuponesVendidos: 0,
-      empresaId: "empresaX123", // <- luego dinámico según el usuario logueado
+      empresaId: empresa.codigo,
+      nombreEmpresa: empresa.nombre,
+      porcentajeComision: empresa.porcentajeComision,
       creado: serverTimestamp(),
     };
 

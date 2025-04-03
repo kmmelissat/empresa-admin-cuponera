@@ -5,8 +5,12 @@ import { db, auth } from "../../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import useEmpresaStore from "../../store/useEmpresaStore";
 
 export default function EmployeeForm() {
+
+  const { empresa } = useEmpresaStore();
+
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -46,7 +50,8 @@ export default function EmployeeForm() {
         ...empleado,
         contrasenaTemporal: contrasenaGenerada, // para referencia (luego debería eliminarse)
         rol: "Empleado",
-        empresaId: "empresaX123", // Ajustar según sesión actual
+        empresa: empresa.nombre,
+        empresaId: empresa.codigo, // Ajustar según sesión actual
         creado: serverTimestamp(),
       };
 
