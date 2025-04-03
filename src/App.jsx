@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Login público */}
-        <Route path="/login" element={<EmpresaLogin />} />
+        <Route path="/" element={<EmpresaLogin />} />
 
         {/* Rutas privadas para empresas */}
         <Route path="/empresa" element={<PrivateRoute />}>
