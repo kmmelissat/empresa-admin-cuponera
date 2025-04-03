@@ -10,7 +10,7 @@ export default function EmpresaLayout() {
   const handleLogout = async () => {
     await signOut(auth);
     cerrarSesion();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
