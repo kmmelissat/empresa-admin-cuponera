@@ -1,34 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "../../firebase"; // Ajusta la ruta si es diferente
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { getDocs } from "firebase/firestore";
-import { useEffect } from "react";
 import useEmpresaStore from "../../store/useEmpresaStore";
 
-
 export default function CreateOffer() {
-  const { empresa } = useEmpresaStore();
+  const { empresa } = useEmpresaStore(); // Obtenemos la empresa desde el store
 
-  const [rubros, setRubros] = useState([]);
-
-  useEffect(() => {
-    const cargarRubros = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "rubros"));
-        const listaRubros = querySnapshot.docs.map((doc) => doc.data().nombre);
-        setRubros(listaRubros);
-      } catch (error) {
-        console.error("Error cargando rubros:", error);
-      }
-    };
-  
-    cargarRubros();
-  }, []);
-
-  
-
-  
   const navigate = useNavigate();
 
   const [oferta, setOferta] = useState({
@@ -42,9 +20,18 @@ export default function CreateOffer() {
     cantidadLimite: "",
     otrosDetalles: "",
     imagen: "",
-    categoria: "", // ← nuevo campo
+    categoria: "", // El rubro se tomará automáticamente del objeto 'empresa'
   });
-  
+
+  // Usamos el rubro de la empresa para asignarlo automáticamente
+  useEffect(() => {
+    if (empresa) {
+      setOferta((prevState) => ({
+        ...prevState,
+        categoria: empresa.rubro || "", // Asignamos el rubro de la empresa
+      }));
+    }
+  }, [empresa]);
 
   const handleChange = (e) => {
     setOferta({
@@ -103,29 +90,28 @@ export default function CreateOffer() {
         </div>
 
         <div className="col-md-6">
-  <label className="form-label">Precio regular</label>
-  <input
-    type="number"
-    step="0.01" // ← esto es lo importante
-    name="precioRegular"
-    onChange={handleChange}
-    required
-    className="form-control"
-  />
-</div>
+          <label className="form-label">Precio regular</label>
+          <input
+            type="number"
+            step="0.01" // ← esto es lo importante
+            name="precioRegular"
+            onChange={handleChange}
+            required
+            className="form-control"
+          />
+        </div>
 
-<div className="col-md-6">
-  <label className="form-label">Precio de oferta</label>
-  <input
-    type="number"
-    step="0.01"
-    name="precioOferta"
-    onChange={handleChange}
-    required
-    className="form-control"
-  />
-</div>
-
+        <div className="col-md-6">
+          <label className="form-label">Precio de oferta</label>
+          <input
+            type="number"
+            step="0.01"
+            name="precioOferta"
+            onChange={handleChange}
+            required
+            className="form-control"
+          />
+        </div>
 
         <div className="col-md-4">
           <label className="form-label">Fecha de inicio</label>
@@ -151,23 +137,6 @@ export default function CreateOffer() {
           <label className="form-label">Otros detalles</label>
           <input type="text" name="otrosDetalles" onChange={handleChange} className="form-control" />
         </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Categoría (rubro)</label>
-          <select
-            name="categoria"
-            value={oferta.categoria}
-            onChange={handleChange}
-            className="form-select"
-            required
-          >
-            <option value="">Seleccione una categoría</option>
-            {rubros.map((rubro, i) => (
-              <option key={i} value={rubro}>{rubro}</option>
-            ))}
-          </select>
-        </div>
-
 
         <div className="col-12 mt-4">
           <button type="submit" className="btn btn-primary">
