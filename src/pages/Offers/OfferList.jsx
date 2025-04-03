@@ -105,6 +105,15 @@ export default function OfferList() {
                             <strong>Comisión:</strong> ${comision.toFixed(2)}
                           </li>
                         </ul>
+                          {/* Mostrar justificación solo si está rechazada */}
+  {cupon.estado === "Oferta rechazada" && cupon.justificacion && (
+    <div className="alert alert-danger mt-3">
+      <strong>Justificación del rechazo:</strong><br />
+      {cupon.justificacion}
+
+      </div>
+  )}
+
                       </div>
                     </div>
                   </div>
