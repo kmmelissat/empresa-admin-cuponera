@@ -2,8 +2,31 @@ import { useState } from "react";
 import { db } from "../../firebase"; // Ajusta la ruta si es diferente
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { getDocs } from "firebase/firestore";
+import { useEffect } from "react";
+
 
 export default function CreateOffer() {
+
+  const [rubros, setRubros] = useState([]);
+
+  useEffect(() => {
+    const cargarRubros = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "rubros"));
+        const listaRubros = querySnapshot.docs.map((doc) => doc.data().nombre);
+        setRubros(listaRubros);
+      } catch (error) {
+        console.error("Error cargando rubros:", error);
+      }
+    };
+  
+    cargarRubros();
+  }, []);
+
+  
+
+  
   const navigate = useNavigate();
 
   const [oferta, setOferta] = useState({
@@ -16,8 +39,10 @@ export default function CreateOffer() {
     fechaLimiteUso: "",
     cantidadLimite: "",
     otrosDetalles: "",
-    imagen: "", // nombre del archivo (ej: nails.jpg)
+    imagen: "",
+    categoria: "", // ← nuevo campo
   });
+  
 
   const handleChange = (e) => {
     setOferta({
@@ -107,6 +132,23 @@ export default function CreateOffer() {
           <label className="form-label">Otros detalles</label>
           <input type="text" name="otrosDetalles" onChange={handleChange} className="form-control" />
         </div>
+
+        <div className="col-md-6">
+          <label className="form-label">Categoría (rubro)</label>
+          <select
+            name="categoria"
+            value={oferta.categoria}
+            onChange={handleChange}
+            className="form-select"
+            required
+          >
+            <option value="">Seleccione una categoría</option>
+            {rubros.map((rubro, i) => (
+              <option key={i} value={rubro}>{rubro}</option>
+            ))}
+          </select>
+        </div>
+
 
         <div className="col-12 mt-4">
           <button type="submit" className="btn btn-primary">
