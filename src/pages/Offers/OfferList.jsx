@@ -15,12 +15,12 @@ export default function OfferList() {
   useEffect(() => {
     const cargarCupones = async () => {
       if (!empresa) return; // espera a que esté cargada
-  
+
       const q = query(
         collection(db, "cupones"),
         where("empresaId", "==", empresa.codigo)
       );
-  
+
       const querySnapshot = await getDocs(q);
       const resultado = [];
       querySnapshot.forEach((doc) => {
@@ -28,10 +28,10 @@ export default function OfferList() {
       });
       setCupones(resultado);
     };
-  
+
     cargarCupones();
   }, [empresa]); // se vuelve a ejecutar cuando `empresa` esté lista
-  
+
 
   // Categorizar las ofertas
   const categorias = {
@@ -66,7 +66,7 @@ export default function OfferList() {
   });
 
   return (
-    
+
     <div className="container mt-5">
       <h2 className="mb-4">Mis Cupones</h2>
 
@@ -118,17 +118,17 @@ export default function OfferList() {
                             <strong>Comisión:</strong> ${comision.toFixed(2)}
                           </li>
                         </ul>
-                          {/* Mostrar justificación solo si está rechazada */}
-  {cupon.estado === "Oferta rechazada" && cupon.justificacion && (
-    <div className="alert alert-danger mt-3">
-      <strong>Justificación del rechazo:</strong><br />
-      {cupon.justificacion}
-      <Link to={`/empresa/ofertas/editar/${cupon.id}`} className="btn btn-warning mt-2">
-    Editar y reenviar
-  </Link>
-      </div>
-      
-  )}
+                        {/* Mostrar justificación solo si está rechazada */}
+                        {cupon.estado === "Oferta rechazada" && cupon.justificacion && (
+                          <div className="alert alert-danger mt-3">
+                            <strong>Justificación del rechazo:</strong><br />
+                            {cupon.justificacion}
+                            <Link to={`/empresa/ofertas/editar/${cupon.id}`} className="btn btn-warning mt-2">
+                              Editar y reenviar
+                            </Link>
+                          </div>
+
+                        )}
 
                       </div>
                     </div>
