@@ -51,8 +51,17 @@ const EditOffer = () => {
   if (!oferta) return <p>Cargando...</p>;
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Editar Oferta</h2>
+
+    <div className="container my-5">
+    <div className="text-center mb-5">
+      <h2 className="fw-bold text-primary">✏️ Editar Oferta</h2>
+      <p className="text-muted">
+        Edita la información de la oferta
+      </p>
+    </div>
+
+    <div className="mb-5">
+      <div className="bg-light rounded shadow-sm p-4">
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Título</label>
@@ -134,7 +143,9 @@ const EditOffer = () => {
           Enviar para aprobación
         </button>
       </form>
+      </div>
     </div>
+  </div>
   );
 };
 

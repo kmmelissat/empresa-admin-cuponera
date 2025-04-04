@@ -1,43 +1,22 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
-import useEmpresaStore from "../store/useEmpresaStore";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar"; // Importamos la nueva Navbar
+import Footer from "../components/Footer"; // Footer sigue igual
 
 export default function EmpresaLayout() {
-  const navigate = useNavigate();
-  const { cerrarSesion } = useEmpresaStore();
-
-  const handleLogout = async () => {
-    await signOut(auth);
-    cerrarSesion();
-    navigate("/");
-  };
-
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Panel de Empresa</h1>
-        <button className="btn btn-outline-danger" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
+    <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
+      {/* Navbar que ahora está en la parte superior */}
+      <Navbar />
+      
+      {/* Contenido principal */}
+      <div className="container mt-4" style={{ flex: 1 }}>
+        {/* Este es el lugar donde el contenido de las páginas se inyectará */}
+        <Outlet />
       </div>
 
-      <nav className="mb-4 d-flex flex-wrap gap-2">
-        <Link to="/empresa/empleados" className="btn btn-outline-primary">
-          Ver empleados
-        </Link>
-        <Link to="/empresa/empleados/nuevo" className="btn btn-outline-success">
-          Nuevo empleado
-        </Link>
-        <Link to="/empresa/ofertas" className="btn btn-outline-secondary">
-          Ver ofertas
-        </Link>
-        <Link to="/empresa/ofertas/nueva" className="btn btn-outline-dark">
-          Crear oferta
-        </Link>
-      </nav>
-
-      <Outlet />
+      {/* Footer que se mantiene al fondo */}
+      <Footer />
     </div>
   );
 }

@@ -7,12 +7,11 @@ import { Link } from "react-router-dom";
 export default function OfferList() {
   const { empresa } = useEmpresaStore();
   const [cupones, setCupones] = useState([]);
-  const porcentajeComision = 0.1; // ← Esto deberías sacarlo de la empresa (hardcodeado por ahora)
+  const porcentajeComision = 0.1; 
   const hoy = new Date();
 
-  // Función para cargar los cupones
   const cargarCupones = async () => {
-    if (!empresa) return; // espera a que esté cargada
+    if (!empresa) return; 
 
     const q = query(
       collection(db, "cupones"),
@@ -29,16 +28,15 @@ export default function OfferList() {
 
   useEffect(() => {
     cargarCupones();
-  }, [empresa]); // se vuelve a ejecutar cuando `empresa` esté lista
+  }, [empresa]);
 
-  // Función para descartar una oferta
   const descartarOferta = async (id) => {
     const ofertaRef = doc(db, "cupones", id);
     await updateDoc(ofertaRef, {
-      estado: "Oferta descartada", // Actualizar el estado a "Oferta descartada"
+      estado: "Oferta descartada", 
     });
-    console.log(`Oferta con ID ${id} ha sido descartada`); // Verifica que la oferta se haya actualizado correctamente
-    cargarCupones(); // Re-cargar los cupones después de descartar
+    console.log(`Oferta con ID ${id} ha sido descartada`);
+    cargarCupones(); 
   };
 
   // Categorizar las ofertas
@@ -74,9 +72,16 @@ export default function OfferList() {
   });
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Mis Cupones</h2>
+    <div className="container my-5">
+    <div className="text-center mb-5">
+      <h2 className="fw-bold text-primary">🎟️ Mis Cupones</h2>
+      <p className="text-muted">
+        Visualiza la información de tus cupones
+      </p>
+    </div>
 
+    <div className="mb-5">
+      <div className="bg-light rounded shadow-sm p-4">
       {Object.entries(categorias).map(([categoria, lista]) => (
         <div key={categoria} className="mb-5">
           <h4 className="mb-3">{categoria}</h4>
@@ -119,7 +124,6 @@ export default function OfferList() {
                             <strong>Comisión:</strong> ${comision.toFixed(2)}
                           </li>
                         </ul>
-                        {/* Mostrar justificación solo si está rechazada */}
                         {cupon.estado === "Oferta rechazada" && cupon.justificacion && (
                           <div className="alert alert-danger mt-3">
                             <strong>Justificación del rechazo:</strong><br />
@@ -130,14 +134,12 @@ export default function OfferList() {
                           </div>
                         )}
 
-                        {/* Mostrar mensaje si está descartada */}
                         {cupon.estado === "Oferta descartada" && (
                           <div className="alert alert-info mt-3">
                             <strong>Esta oferta ha sido descartada.</strong>
                           </div>
                         )}
 
-                        {/* Botón para descartar la oferta, solo si está rechazada */}
                         {cupon.estado === "Oferta rechazada" && (
                           <button
                             className="btn btn-danger mt-3"
@@ -155,6 +157,8 @@ export default function OfferList() {
           )}
         </div>
       ))}
+      </div>
     </div>
-  );
+  </div>
+);
 }

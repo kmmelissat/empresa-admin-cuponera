@@ -66,8 +66,16 @@ export default function EmployeeForm() {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Registrar nuevo empleado</h2>
+    <div className="container my-5">
+    <div className="text-center mb-5">
+      <h2 className="fw-bold text-primary">👤 Registrar nuevo empleado</h2>
+      <p className="text-muted">
+        Ingresa la información para registrar un nuevo empleado
+      </p>
+    </div>
+
+    <div className="mb-5">
+      <div className="bg-light rounded shadow-sm p-4">
       <form onSubmit={handleSubmit} className="row g-3">
         <div className="col-md-6">
           <label className="form-label">Nombres</label>
@@ -105,6 +113,8 @@ export default function EmployeeForm() {
           </button>
         </div>
       </form>
+      </div>
     </div>
+  </div>
   );
 }

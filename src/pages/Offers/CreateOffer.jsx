@@ -71,8 +71,17 @@ export default function CreateOffer() {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Crear nuevo cupón</h2>
+
+    <div className="container my-5">
+    <div className="text-center mb-5">
+      <h2 className="fw-bold text-primary">🎉 Crear Nuevo Cupon</h2>
+      <p className="text-muted">
+        Ingresa la información de tu oferta para crear un nuevo cupón
+      </p>
+    </div>
+
+    <div className="mb-5">
+      <div className="bg-light rounded shadow-sm p-4">
       <form onSubmit={handleSubmit} className="row g-3">
         <div className="col-md-6">
           <label className="form-label">Título de la oferta</label>
@@ -144,6 +153,8 @@ export default function CreateOffer() {
           </button>
         </div>
       </form>
+      </div>
     </div>
+  </div>
   );
 }
