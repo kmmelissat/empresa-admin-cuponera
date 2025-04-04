@@ -1,37 +1,45 @@
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import useEmpresaStore from "../../store/useEmpresaStore";
 import { Link } from "react-router-dom";
 
-
 export default function OfferList() {
   const { empresa } = useEmpresaStore();
-
   const [cupones, setCupones] = useState([]);
   const porcentajeComision = 0.1; // ← Esto deberías sacarlo de la empresa (hardcodeado por ahora)
   const hoy = new Date();
 
+  // Función para cargar los cupones
+  const cargarCupones = async () => {
+    if (!empresa) return; // espera a que esté cargada
+
+    const q = query(
+      collection(db, "cupones"),
+      where("empresaId", "==", empresa.codigo)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const resultado = [];
+    querySnapshot.forEach((doc) => {
+      resultado.push({ id: doc.id, ...doc.data() });
+    });
+    setCupones(resultado);
+  };
+
   useEffect(() => {
-    const cargarCupones = async () => {
-      if (!empresa) return; // espera a que esté cargada
-
-      const q = query(
-        collection(db, "cupones"),
-        where("empresaId", "==", empresa.codigo)
-      );
-
-      const querySnapshot = await getDocs(q);
-      const resultado = [];
-      querySnapshot.forEach((doc) => {
-        resultado.push({ id: doc.id, ...doc.data() });
-      });
-      setCupones(resultado);
-    };
-
     cargarCupones();
   }, [empresa]); // se vuelve a ejecutar cuando `empresa` esté lista
 
+  // Función para descartar una oferta
+  const descartarOferta = async (id) => {
+    const ofertaRef = doc(db, "cupones", id);
+    await updateDoc(ofertaRef, {
+      estado: "Oferta descartada", // Actualizar el estado a "Oferta descartada"
+    });
+    console.log(`Oferta con ID ${id} ha sido descartada`); // Verifica que la oferta se haya actualizado correctamente
+    cargarCupones(); // Re-cargar los cupones después de descartar
+  };
 
   // Categorizar las ofertas
   const categorias = {
@@ -66,7 +74,6 @@ export default function OfferList() {
   });
 
   return (
-
     <div className="container mt-5">
       <h2 className="mb-4">Mis Cupones</h2>
 
@@ -87,12 +94,6 @@ export default function OfferList() {
                 return (
                   <div className="col-md-4 mb-4" key={cupon.id}>
                     <div className="card h-100">
-                      <img
-                        src={`/img/${cupon.imagen || "default.jpg"}`}
-                        className="card-img-top"
-                        alt={cupon.titulo}
-                        style={{ height: "200px", objectFit: "cover" }}
-                      />
                       <div className="card-body d-flex flex-column justify-content-between">
                         <div>
                           <h5 className="card-title">{cupon.titulo}</h5>
@@ -127,9 +128,24 @@ export default function OfferList() {
                               Editar y reenviar
                             </Link>
                           </div>
-
                         )}
 
+                        {/* Mostrar mensaje si está descartada */}
+                        {cupon.estado === "Oferta descartada" && (
+                          <div className="alert alert-info mt-3">
+                            <strong>Esta oferta ha sido descartada.</strong>
+                          </div>
+                        )}
+
+                        {/* Botón para descartar la oferta, solo si está rechazada */}
+                        {cupon.estado === "Oferta rechazada" && (
+                          <button
+                            className="btn btn-danger mt-3"
+                            onClick={() => descartarOferta(cupon.id)}
+                          >
+                            Descartar Oferta
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
